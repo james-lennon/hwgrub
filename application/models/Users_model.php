@@ -21,13 +21,53 @@ class Users_model extends CI_Model{
 	}
 
 	public function add_user($email, $fname, $lname, $phone){
+		$password_hash = password_hash(openssl_random_pseudo_bytes(20), PASSWORD_DEFAULT);
+		$forgot_hash = hash("sha256", openssl_random_pseudo_bytes(10));
 		$data = array(
 			"email"=>$email,
 			"first_name"=>$fname,
 			"last_name"=>$lname,
 			"phone"=>$phone,
+			"password"=>$password_hash,
 			);
 		$this->db->insert('users', $data);
+	}
+
+	public function forgot_password($email){
+		$this->load->helper("url");
+
+		$query = $this->db->get_where("users", array("email"=>$email));
+		if($query->num_rows()==0){
+			return FALSE;
+		}
+
+		$bytes = openssl_random_pseudo_bytes(100);
+		$token = hash("sha256", $bytes);
+
+		$this->db->query('
+			UPDATE
+				users
+			SET
+				forgot_hash=?,
+				forgot_time=?
+			WHERE
+				email = ?
+			', array($token, time(), $email));
+
+		$url = base_url("users/forgot/$token");
+		return $url;
+	}
+
+	public function check_forgot_hash($hash){
+		$query = $this->db->query('
+			SELECT
+				*
+			FROM
+				users
+			WHERE
+				users.forgot_hash = ?
+			', array($hash));
+		return $query->row();
 	}
 
 	public function set_password($user_id, $password){
@@ -36,7 +76,8 @@ class Users_model extends CI_Model{
 			UPDATE
 				users
 			SET
-				users.password = ?
+				users.password = ?,
+				users.forgot_hash = NULL
 			WHERE
 				users.user_id = ?
 				', array($hash, $user_id));
@@ -57,7 +98,7 @@ class Users_model extends CI_Model{
 		}
 		$hash = $query->row()->password;
 		if(password_verify($password, $hash)){
-			return TRUE;
+			return $query->row();
 		}else{
 			return FALSE;
 		}
