@@ -6,20 +6,22 @@ class Users extends CI_Controller{
 	public function test(){
 		$this->load->model("users_model");
 		$this->load->model("trips_model");
-		// $email = "test@gmail.com";
+		$email = "test@gmail.com";
+		echo $email;
 		// $this->users_model->add_user($email, "James", "Lennon", "911");
-		// echo $this->users_model->forgot_password($email);
+		$url = $this->users_model->forgot_password($email);
+		var_dump($url);
 
 		// $this->load->model("users_model");
 		// $var = $this->users_model->check_login("test@gmail.com", md5("test"));
 		// var_dump($var);
 
-		$user = $this->users_model->check_login("test@gmail.com", md5("test"));
+		// $user = $this->users_model->check_login("test@gmail.com", md5("test"));
 
-		$this->load->model("ratings_model");
+		// $this->load->model("ratings_model");
 		// $this->ratings_model->add_rating($user->user_id, "Alright job!", 0, 1);
-		$ratings = $this->ratings_model->get_driver_record($user->user_id);
-		var_dump($ratings);
+		// $ratings = $this->ratings_model->get_driver_record($user->user_id);
+		// var_dump($ratings);
 	}
 
 	public function login(){

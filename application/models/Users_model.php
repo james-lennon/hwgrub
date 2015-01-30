@@ -41,7 +41,7 @@ class Users_model extends CI_Model{
 			return FALSE;
 		}
 		$elapsed_time = time() - $query->row()->forgot_time;
-		$days = $elapsed_time / (3600*24);
+		$days = $elapsed_time / (3600*12);
 		if($days < 1){
 			return FALSE;
 		}
