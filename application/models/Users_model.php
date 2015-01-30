@@ -40,6 +40,11 @@ class Users_model extends CI_Model{
 		if($query->num_rows()==0){
 			return FALSE;
 		}
+		$elapsed_time = time() - $query->row()->forgot_time;
+		$days = $elapsed_time / (3600*24);
+		if($days < 1){
+			return FALSE;
+		}
 
 		$bytes = openssl_random_pseudo_bytes(100);
 		$token = hash("sha256", $bytes);
@@ -80,7 +85,7 @@ class Users_model extends CI_Model{
 				users.forgot_hash = NULL
 			WHERE
 				users.user_id = ?
-				', array($hash, $user_id));
+			', array($hash, $user_id));
 	}
 
 	public function set_img($user_id, $img_url){
@@ -88,11 +93,26 @@ class Users_model extends CI_Model{
 		if($query->num_rows()==0){
 			return FALSE;
 		}
-		$this->db->query('UPDATE users SET users.img_url=? WHERE users.user_id = ?', array($img_url, $user_id));
+		$this->db->query('
+			UPDATE 
+				users 
+			SET 
+				users.img_url=? 
+			WHERE 
+				users.user_id = ?
+			', array($img_url, $user_id));
 	}
 
 	public function check_login($email, $password){
-		$query = $this->db->query('SELECT * FROM users WHERE users.email = ?', array($email));
+		$query = $this->db->query('
+			SELECT 
+				* 
+			FROM 
+				users
+			WHERE
+				users.email = ?       AND
+				users.forgot_hash is not NULL
+			', array($email));
 		if($query->num_rows()==0){
 			return FALSE;
 		}

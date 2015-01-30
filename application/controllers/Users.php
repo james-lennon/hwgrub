@@ -5,15 +5,40 @@ class Users extends CI_Controller{
 
 	public function test(){
 		$this->load->model("users_model");
-		$email = "test@gmail.com";
-		$this->users_model->add_user($email, "James", "Lennon", "911");
-		echo $this->users_model->forgot_password($email);
+		$this->load->model("trips_model");
+		// $email = "test@gmail.com";
+		// $this->users_model->add_user($email, "James", "Lennon", "911");
+		// echo $this->users_model->forgot_password($email);
+
+		// $this->load->model("users_model");
+		// $var = $this->users_model->check_login("test@gmail.com", md5("test"));
+		// var_dump($var);
+
+		$user = $this->users_model->check_login("test@gmail.com", md5("test"));
+
+		$this->load->model("ratings_model");
+		// $this->ratings_model->add_rating($user->user_id, "Alright job!", 0, 1);
+		$ratings = $this->ratings_model->get_driver_record($user->user_id);
+		var_dump($ratings);
 	}
 
-	public function check(){
+	public function login(){
+		$email = $this->input->post("email");
+		$password = $this->input->post("password");
+
+		if(!$email || !$password){
+			echo json_encode(array("error"=>"no email or password given"));
+			exit();
+		}
+
 		$this->load->model("users_model");
-		$var = $this->users_model->check_login("test@gmail.com", md5("test"));
-		var_dump($var);
+		$user = $this->users_model->check_login($email, $password);
+
+		if (!$user) {
+			echo json_encode($user);
+		}else{
+			echo json_encode(array("error"=>"invalid login"));
+		}
 	}
 
 	public function forgot($hash = FALSE){
