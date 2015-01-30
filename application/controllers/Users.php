@@ -6,15 +6,14 @@ class Users extends CI_Controller{
 	public function test(){
 		$this->load->model("users_model");
 		$this->load->model("trips_model");
-		$email = "test@gmail.com";
-		echo $email;
+		$email = "abcde@fg.com";
 		// $this->users_model->add_user($email, "James", "Lennon", "911");
-		$url = $this->users_model->forgot_password($email);
-		var_dump($url);
+		// $url = $this->users_model->forgot_password($email);
+		// var_dump($url);
 
 		// $this->load->model("users_model");
-		// $var = $this->users_model->check_login("test@gmail.com", md5("test"));
-		// var_dump($var);
+		$var = $this->users_model->check_login($email, md5("test"));
+		var_dump($var);
 
 		// $user = $this->users_model->check_login("test@gmail.com", md5("test"));
 
@@ -22,6 +21,27 @@ class Users extends CI_Controller{
 		// $this->ratings_model->add_rating($user->user_id, "Alright job!", 0, 1);
 		// $ratings = $this->ratings_model->get_driver_record($user->user_id);
 		// var_dump($ratings);
+	}
+
+	public function add(){
+		$email = $this->input->post("email");
+		$fname = $this->input->post("firstname");
+		$lname = $this->input->post("lastname");
+		$phone = $this->input->post("phone");
+
+		if(!($email && $fname && $lname && $phone)){
+			echo json_encode(array("error"=>"No email, firstname, lastname, or phone given."));
+			exit();
+		}
+
+		$this->load->model("users_model");
+		$success = $this->users_model->add_user($email, $fname, $lname, $phone);
+		if(!$success){
+			echo json_encode(array("error"=>"User with email already exists"));
+			exit();
+		}
+		$url = $this->users_model->forgot_password($email);
+		echo json_encode(array("url"=>$url));
 	}
 
 	public function login(){
@@ -36,7 +56,7 @@ class Users extends CI_Controller{
 		$this->load->model("users_model");
 		$user = $this->users_model->check_login($email, $password);
 
-		if (!$user) {
+		if ($user) {
 			echo json_encode($user);
 		}else{
 			echo json_encode(array("error"=>"invalid login"));

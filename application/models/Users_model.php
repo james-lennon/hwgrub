@@ -21,6 +21,11 @@ class Users_model extends CI_Model{
 	}
 
 	public function add_user($email, $fname, $lname, $phone){
+		$query = $this->db->query('SELECT * FROM users WHERE users.email = ?', array($email));
+		if($query->num_rows()!=0){
+			return FALSE;
+		}
+
 		$password_hash = password_hash(openssl_random_pseudo_bytes(20), PASSWORD_DEFAULT);
 		$forgot_hash = hash("sha256", openssl_random_pseudo_bytes(10));
 		$data = array(
@@ -31,6 +36,7 @@ class Users_model extends CI_Model{
 			"password"=>$password_hash,
 			);
 		$this->db->insert('users', $data);
+		return TRUE;
 	}
 
 	public function forgot_password($email){
@@ -111,7 +117,7 @@ class Users_model extends CI_Model{
 				users
 			WHERE
 				users.email = ?       AND
-				users.forgot_hash is not NULL
+				users.forgot_hash is NULL
 			', array($email));
 		if($query->num_rows()==0){
 			return FALSE;
