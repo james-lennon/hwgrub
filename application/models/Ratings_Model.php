@@ -11,6 +11,15 @@ public function __construct(){
 		$this->load->database();
 	}
 
+public function get_Rating($rating_id)
+{
+	$query = $this->db->query('SELECT * FROM ratings WHERE ratings.rating_id = ?', array($rating_id));
+	if ($query->num_rows()==0){
+		return FALSE;
+	}
+	return $query->row();
+}
+
 public function get_Driver_Ratings($user_id)
 {	
 	$query = $this->db->query('
@@ -65,11 +74,25 @@ public function add_Rating($user_id, $rating_text, $type, $value)
 			"type"=>$type,
 			"value"=>$value,
 			);
-		$this->db->insert('ratings', $data);
+	$this->db->insert('ratings', $data);
 }
 
 public function get_Driver_Record($user_id)
 {
+	$query = $this->db->query('
+		SELECT 
+			* 
+		FROM 
+			ratings
+		WHERE 
+			ratings.user_id = ?,
+		AND 
+			ratings.type = ?', 
+			array($user_id, 0));
+	if ($query->rum_rows()== 0){
+		return FALSE;
+	}
+
 	$query1 = $this->db->query('
 		SELECT 
 			* 
@@ -111,6 +134,20 @@ public function get_Driver_Record($user_id)
 
 public function get_Customer_Record($user_id)
 {
+	$query = $this->db->query('
+		SELECT 
+			* 
+		FROM 
+			ratings
+		WHERE 
+			ratings.user_id = ?,
+		AND 
+			ratings.type = ?', 
+			array($user_id, 1));
+	if ($query->rum_rows()==0){
+		return FALSE;
+	}
+	
 	$query1 = $this->db->query('
 		SELECT 
 			* 
@@ -126,6 +163,7 @@ public function get_Customer_Record($user_id)
 			array($user_id, 1, 0));
 
 		$negative = $query1->num_rows(); 
+
 
 		$query2 = $this->db->query('
 		SELECT 
