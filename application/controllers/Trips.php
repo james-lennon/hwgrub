@@ -13,8 +13,8 @@ class Trips extends CI_Controller {
 		echo json_encode($trips);
 	}
 
-	public function get_active_trips() {
-		$trips = $this->trips_model->get_active_trips();
+	public function get_all_active_trips() {
+		$trips = $this->trips_model->get_all_active_trips();
 		echo json_encode($trips);
 	}
 
@@ -23,8 +23,13 @@ class Trips extends CI_Controller {
 		echo json_encode($trips);
 	}
 
-	public function add_trip() {}
+	public function get_user_active_trips($user_id) {
+		$trips = $this->trips_model->get_user_active_trips($driver_id);
+		echo json_encode($trips);
+	}
 
+	public function add_trip($driver_id, $expiration, $eta, $restaurant) {
+		$this->trips_model->add_trip($driver_id, $expiration, $eta, $restaurant);
 	}
 
 }
