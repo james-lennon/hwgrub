@@ -23,6 +23,11 @@ class Trips_model extends CI_Model{
 		$this->db->insert('trips', $data);
 	} 
 
+public function get_all_trips {
+
+}
+
+
 	public function get_user_trips($driver_id) {
 		$query = $this->db->query('SELECT * from users WHERE users.user_id = ?', array($user_id));
 		if($query->num_rows()==0){
