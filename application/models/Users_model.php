@@ -11,7 +11,12 @@ class Users_model extends CI_Model{
 	public function get_user($id){
 		$query = $this->db->query('
 			SELECT
-				*
+				users.user_id, 
+				users.first_name, 
+				users.last_name, 
+				users.email, 
+				users.phone, 
+				users.img_url
 			FROM
 				users
 			WHERE
@@ -47,7 +52,7 @@ class Users_model extends CI_Model{
 			return FALSE;
 		}
 		$elapsed_time = time() - $query->row()->forgot_time;
-		$days = $elapsed_time / (3600*12);
+		$days = $elapsed_time / (3600*24);
 		if($days < 1){
 			return FALSE;
 		}
@@ -124,7 +129,7 @@ class Users_model extends CI_Model{
 		}
 		$hash = $query->row()->password;
 		if(password_verify($password, $hash)){
-			return $query->row();
+			return $query->row()->user_id;
 		}else{
 			return FALSE;
 		}

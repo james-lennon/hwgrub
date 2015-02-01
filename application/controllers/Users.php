@@ -53,13 +53,35 @@ class Users extends CI_Controller{
 			exit();
 		}
 
-		$this->load->model("users_model");
-		$user = $this->users_model->check_login($email, $password);
+		$this->load->model(array("users_model", "ratings_model", "trips_model"));
+		$user_id = $this->users_model->check_login($email, $password);
 
-		if ($user) {
-			echo json_encode($user);
+		if ($user_id != FALSE) {
+			$driver_ratings = $this->ratings_model->get_driver_ratings($user_id);
+			$customer_ratings = $this->ratings_model->get_customer_ratings($user_id);
+			$trips = $this->trips_model->get_user_trips($user_id);
+			$user = $this->users_model->get_user($user_id);
+
+			$data = array(
+				"user" => $user,
+				"trips" => $trips,
+				"driver_ratings" => $driver_ratings,
+				"customer_ratings" => $customer_ratings,
+				);
+
+			echo json_encode($data);
 		}else{
 			echo json_encode(array("error"=>"invalid login"));
+		}
+	}
+
+	public function send_forgot_email($email){
+		$this->load->model("users_model");
+		$url = $this->users_model->forgot_password($email);
+		if($url){
+			echo json_encode(array("url"=>$url));
+		}else{
+			echo json_encode(array("error"=>"No user with email or wait one day."));
 		}
 	}
 
