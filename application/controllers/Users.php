@@ -45,16 +45,17 @@ class Users extends CI_Controller{
 	}
 
 	public function login(){
-		$email = $this->input->post("email");
-		$password = $this->input->post("password");
+		// $email = $this->input->post("email");
+		// $password = $this->input->post("password");
 
-		if(!$email || !$password){
-			echo json_encode(array("error"=>"no email or password given"));
-			exit();
-		}
+		// if(!$email || !$password){
+		// 	echo json_encode(array("error"=>"no email or password given"));
+		// 	exit();
+		// }
 
 		$this->load->model(array("users_model", "ratings_model", "trips_model"));
-		$user_id = $this->users_model->check_login($email, $password);
+		// $user_id = $this->users_model->check_login($email, $password);
+		$user_id = check_auth();
 
 		if ($user_id != FALSE) {
 			$driver_ratings = $this->ratings_model->get_driver_ratings($user_id);
