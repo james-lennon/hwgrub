@@ -33,6 +33,16 @@ class Trips_model extends CI_Model{
 		return $query->result();
 	}
 
+	public function get_user_active_trips($user_id) {
+		$query = $this->db->query('SELECT * from users WHERE users.user_id = ?', array($user_id));
+		if($query->num_rows()==0){
+			return FALSE;
+		}
+
+		$query = $this->db->query('SELECT * FROM trips WHERE trips.driver_id = ? AND trips.expiration > ?', array($user_id, time()));
+		return $query->result();
+	}
+
 	public function get_all_trips() {
 		$query = $this->db->query('SELECT * from trips');
 		return $query->result();
