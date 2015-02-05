@@ -20,17 +20,31 @@ class Trips extends CI_Controller {
 		echo json_encode("trips"=>$trips);
 	}
 
-	public function get_user_trips($user_id) {
+	public function get_user_trips() {
 		check_auth();
+		$user_id = $this->input->post("user_id");
 		$trips = $this->trips_model->get_user_trips($user_id);
 		echo json_encode("trips"=>$trips);
 	}
 
-	public function get_user_active_trips($user_id) {
+	public function get_user_active_trips() {
 		check_auth();
+		$user_id = $this->input->post("user_id");
 		$trips = $this->trips_model->get_user_active_trips($user_id);
 		echo json_encode("trips"=>$trips);
 	}
+
+	public function delete_trip() {
+		check_auth();
+		$trip_id = $this->input->post("trip_id");
+		if(!$trip_id){
+			echo json_encode(array("error"=>"No trip id given"));
+			exit();
+		}
+		$this->trips_model->delete_trip($trip_id);
+		echo json_encode(array("success"=>1));
+	}
+
 
 	public function add_trip() {
 		$driver_id = check_auth();
@@ -44,5 +58,4 @@ class Trips extends CI_Controller {
 		$this->trips_model->add_trip($driver_id, $expiration, $eta, $restaurant);
 		echo json_encode(array("success"=>1));
 	}
-
 }

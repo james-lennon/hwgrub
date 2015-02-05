@@ -25,6 +25,7 @@ class Trips extends CI_Controller {
 		}
 		
 		$this->order_model->place_order($trip_id, $order_text, $customer_id, $fee);
+		echo json_encode(array("success"=>1));
 	}
 
 	public function accept_order () {
@@ -36,7 +37,7 @@ class Trips extends CI_Controller {
 			exit();
 		}
 		$this->order_model->update_order_status($order_id, $state);
-
+		echo json_encode(array("success"=>1));
 	}
 
 	public function reject_order () {
@@ -49,7 +50,7 @@ class Trips extends CI_Controller {
 		}
 
 		$this->order_model->update_order_status($order_id, $state);
-
+		echo json_encode(array("success"=>1));
 	}
 
 	public function get_trip_orders() {
