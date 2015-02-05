@@ -54,6 +54,18 @@ class Trips_model extends CI_Model{
 		return $query->result();
 	}
 
+	public function delete_trip($trip_id)
+	{
+		$query = $this->db->query('
+			UPDATE 
+				trips 
+			SET 
+				trips.expiration = ? 
+			WHERE 
+				trips.trip_id = ?
+			', array(0, $trip_id));
+	}
+
 	// public function get_user_active_trips($driver_id) {
 
 	// 	$query = $this->db->query('SELECT * from users WHERE users.user_id = ?', array($user_id));
