@@ -22,6 +22,7 @@ class Users_model extends CI_Model{
 			WHERE
 				users.user_id = ?
 			', array($id));
+		
 		return $query->row();
 	}
 
