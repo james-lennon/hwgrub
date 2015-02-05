@@ -11,27 +11,27 @@ class Trips extends CI_Controller {
 	public function get_all_trips() {
 		check_auth();
 		$trips = $this->trips_model->get_all_trips();
-		echo json_encode("trips"=>$trips);
+		echo json_encode(array("trips"=>$trips));
 	}
 
 	public function get_all_active_trips() {
 		check_auth();
 		$trips = $this->trips_model->get_all_active_trips();
-		echo json_encode("trips"=>$trips);
+		echo json_encode(array("trips"=>$trips));
 	}
 
 	public function get_user_trips() {
 		check_auth();
 		$user_id = $this->input->post("user_id");
 		$trips = $this->trips_model->get_user_trips($user_id);
-		echo json_encode("trips"=>$trips);
+		echo json_encode(array("trips"=>$trips));
 	}
 
 	public function get_user_active_trips() {
 		check_auth();
 		$user_id = $this->input->post("user_id");
 		$trips = $this->trips_model->get_user_active_trips($user_id);
-		echo json_encode("trips"=>$trips);
+		echo json_encode(array("trips"=>$trips));
 	}
 
 	public function delete_trip() {
