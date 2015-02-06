@@ -8,18 +8,30 @@ class Ratings extends CI_Controller {
 		$this->load->model("orders_model");
 	}
 
-	public function get_ratings()
+	public function get_driver_ratings()
 	{	
 		check_auth();
 		$user_id = $this->input->post("user_id");
-		$type = $this->input->post("type"); 
 
 		if(!($user_id && $type)){
-			echo json_encode(array("error"=>"No user id or type."));
+			echo json_encode(array("error"=>"No driver id."));
 			exit();
 		}
 
-		$this->ratings_model->get_ratings($user_id, $type); 
+		$this->ratings_model->get_driver_ratings($user_id); 
+	}
+
+	public function get_customer_ratings() {
+
+		check_auth();
+		$user_id = $this->input->post("user_id");
+
+		if(!($user_id && $type)){
+			echo json_encode(array("error"=>"No customer id."));
+			exit();
+		}
+
+		$this->ratings_model->get_customer_ratings($user_id); 
 	}
 
 	public function add_rating() {
@@ -36,3 +48,30 @@ class Ratings extends CI_Controller {
 
 		$this->ratings_model->add_rating($user_id, $rating_text, $type, $value); 
 	}
+
+	public function get_driver_record() {
+		check_auth();
+		$user_id = $this->input->post("user_id");
+
+		if(!($user_id && $type)){
+			echo json_encode(array("error"=>"No driver id."));
+			exit();
+		}
+
+		$this->ratings_model->get_driver_record($user_id); 
+	}
+
+	public function get_customer_record() {
+		check_auth();
+		$user_id = $this->input->post("user_id");
+
+		if(!($user_id && $type)){
+			echo json_encode(array("error"=>"No customer id."));
+			exit();
+		}
+
+		$this->ratings_model->get_customer_record($user_id); 
+	}
+
+
+}
