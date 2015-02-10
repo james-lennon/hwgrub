@@ -29,6 +29,14 @@ class Users extends CI_Controller{
 		$user_id = check_auth();
 
 		if ($user_id != FALSE) {
+			$this->load->library("session");
+			$credentials = array(
+				"email"=>$this->input->post("email"),
+				"password"=>$this->input->post("password"),
+				"no_hash"=>$this->input->post("no_hash")
+				);
+			$this->session->set_userdata($credentials);
+
 			echo json_encode(array("user_id"=>$user_id));
 		}else{
 			echo json_encode(array("error"=>"invalid login"));

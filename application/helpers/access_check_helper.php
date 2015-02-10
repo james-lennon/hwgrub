@@ -12,7 +12,16 @@ function check_auth(){
 	$no_hash = $CI->input->post("no_hash");
 
 	if(!$email || !$password){
-		error_exit("no email or password given");
+		$CI->load->library("session");
+		$creds = $CI->session->all_userdata();
+
+		if(!$creds["email"] || !$creds["password"]){
+			error_exit("no email or password given");
+		}else{
+			$email = $creds["email"];
+			$password = $creds["password"];
+			$no_hash = $creds["no_hash"];
+		}
 	}
 	if($no_hash){
 		$password = md5($password);
