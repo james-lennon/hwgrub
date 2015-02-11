@@ -13,14 +13,12 @@ function check_auth(){
 
 	if(!$email || !$password){
 		$CI->load->library("session");
-		$creds = $CI->session->all_userdata();
+		$email = $CI->session->userdata("email");
+		$password = $CI->session->userdata("password");
+		$no_hash = $CI->session->userdata("no_hash");
 
-		if(!$creds["email"] || !$creds["password"]){
+		if(!($email && $password)){
 			error_exit("no email or password given");
-		}else{
-			$email = $creds["email"];
-			$password = $creds["password"];
-			$no_hash = $creds["no_hash"];
 		}
 	}
 	if($no_hash){

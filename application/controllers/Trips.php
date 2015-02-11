@@ -20,6 +20,12 @@ class Trips extends CI_Controller {
 		echo json_encode(array("trips"=>$trips));
 	}
 
+	public function get_active_trips_content(){
+		check_auth();
+		$trips = $this->trips_model->get_all_active_trips();
+		$this->load->view("content/trips_list", array("trips"=>$trips));
+	}
+
 	public function get_user_trips() {
 		check_auth();
 		$user_id = $this->input->post("user_id");

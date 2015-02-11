@@ -80,8 +80,9 @@ class Users extends CI_Controller{
 		}
 	}
 
-	public function get($user_id = FALSE){
+	public function get(){
 		check_auth();
+		$user_id = $this->input->post("user_id");
 
 		if ($user_id != FALSE) {
 			$this->load->model(array("users_model","ratings_model", "trips_model"));
@@ -101,6 +102,20 @@ class Users extends CI_Controller{
 		}else{
 			echo json_encode(array("error"=>"no user id given"));
 		}
+	}
+
+	public function get_user_content(){
+		check_auth();
+		$user_id = $this->input->post("user_id");
+
+		if(!$user_id){
+			exit(json_encode(array("No user_id given")));
+		}
+
+		$this->load->model("users_model");
+		$data["user"] = $this->users_model->get_user($user_id);
+
+		$this->load->view("content/user_info", $data);
 	}
 
 }
