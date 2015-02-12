@@ -5,6 +5,20 @@ function error_exit($msg){
 	exit(json_encode(array("error"=>$msg)));
 }
 
+function check_sess_auth(){
+	$CI =& get_instance();
+	$CI->load->library("session");
+	$email = $CI->session->userdata("email");
+	$password = $CI->session->userdata("password");
+	$no_hash = $CI->session->userdata("no_hash");
+
+	if(!($email && $password)){
+		error_exit("no email or password given");
+	}
+
+	return check_credentials($email, $password, $no_hash);
+}
+
 function check_auth(){
 	$CI =& get_instance();
 	$email = $CI->input->post("email");
@@ -21,6 +35,11 @@ function check_auth(){
 			error_exit("no email or password given");
 		}
 	}
+	return check_credentials($email, $password, $no_hash);
+}
+
+function check_credentials($email, $password, $no_hash = FALSE){
+	$CI =& get_instance();
 	if($no_hash){
 		$password = md5($password);
 	}
@@ -32,3 +51,4 @@ function check_auth(){
 		return $res;
 	}
 }
+
