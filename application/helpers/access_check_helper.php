@@ -13,7 +13,8 @@ function check_sess_auth(){
 	$no_hash = $CI->session->userdata("no_hash");
 
 	if(!($email && $password)){
-		error_exit("no email or password given");
+		// error_exit("no email or password given");
+		return FALSE;
 	}
 
 	return check_credentials($email, $password, $no_hash);

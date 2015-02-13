@@ -22,8 +22,14 @@ class Trips extends CI_Controller {
 
 	public function get_active_trips_content(){
 		check_auth();
+		$this->load->model("orders_model");
+
 		$trips = $this->trips_model->get_all_active_trips();
-		$this->load->view("content/trips_list", array("trips"=>$trips));
+		$orders = array();
+		for ($i=0; $i<count($trips); $i++) {
+			$orders[$i] = $this->orders_model->get_trip_orders($trips[$i]->trip_id);
+		}
+		$this->load->view("content/trips_list", array("trips"=>$trips, "orders"=>$orders));
 	}
 
 	public function get_user_trips() {
