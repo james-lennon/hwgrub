@@ -1,15 +1,14 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Trips extends CI_Controller {
+class Orders extends CI_Controller {
 
 	public function __construct() {
 		parent::__construct();
 		$this->load->model("orders_model");
 	}
 
-	public function place_older()
-
+	public function place_order() {
 		$customer_id = check_auth();
 		$order_text = $this->input->post("order_text");
 		$fee = $this->input->post("fee");
@@ -24,7 +23,7 @@ class Trips extends CI_Controller {
 			exit();
 		}
 		
-		$this->order_model->place_order($trip_id, $order_text, $customer_id, $fee);
+		$this->orders_model->place_order($trip_id, $order_text, $customer_id, $fee);
 		echo json_encode(array("success"=>1));
 	}
 
