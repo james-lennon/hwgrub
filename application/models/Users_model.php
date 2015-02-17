@@ -42,7 +42,7 @@ class Users_model extends CI_Model{
 			"password"=>$password_hash,
 			);
 		$this->db->insert('users', $data);
-		return TRUE;
+		return $this->db->insert_id();
 	}
 
 	public function forgot_password($email){
@@ -109,7 +109,7 @@ class Users_model extends CI_Model{
 			UPDATE 
 				users 
 			SET 
-				users.img_url=? 
+				users.img_url = ? 
 			WHERE 
 				users.user_id = ?
 			', array($img_url, $user_id));

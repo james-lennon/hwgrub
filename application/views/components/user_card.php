@@ -1,7 +1,7 @@
 <div class="ui card">
-  <!-- <div class="image">
-    <img src="<? echo "images/default.jpg";//echo $img_url; ?>">
-  </div> -->
+  <div class="image">
+    <img src="<? echo $img_url; ?>">
+  </div>
   <div class="content">
     <div class="header"><? echo "$first_name $last_name"; ?></div>
     <div class="meta">

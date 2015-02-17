@@ -1,6 +1,6 @@
 <div class="ui fluid card">
 	<div class="content">
-      <a class="centered right floated place-order-btn" trip="<? echo $trip_id; ?>">
+      <a class="centered right floated place-order-btn" trip="<? echo $trip_id; ?>" name="<? echo $restaurant_name ?>">
   			<i class="plus icon"></i>
   			Place Order
   		</a>

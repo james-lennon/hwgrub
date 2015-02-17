@@ -15,11 +15,15 @@ class Users extends CI_Controller{
 		}
 
 		$this->load->model("users_model");
-		$success = $this->users_model->add_user($email, $fname, $lname, $phone);
-		if(!$success){
+		$user_id = $this->users_model->add_user($email, $fname, $lname, $phone);
+		if(!$user_id){
 			echo json_encode(array("error"=>"User with email already exists"));
 			exit();
 		}
+
+		$default_img_url = "http://www.gravatar.com/avatar/".md5(strtolower(trim($email)))."?d=identicon";
+		$this->users_model->set_img($user_id, $default_img_url);
+
 		$url = $this->users_model->forgot_password($email);
 		echo json_encode(array("url"=>$url));
 	}
@@ -43,6 +47,12 @@ class Users extends CI_Controller{
 		}else{
 			echo json_encode(array("error"=>"invalid login"));
 		}
+	}
+
+	public function logout(){
+		$this->load->library("session");
+		$this->session->sess_destroy();
+		echo json_encode(array("success"=>1));
 	}
 
 	public function send_forgot_email($email){
