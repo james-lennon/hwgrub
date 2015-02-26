@@ -11,6 +11,19 @@ class Ratings_model extends CI_Model{
 		$this->load->database();
 	}
 
+	public function get_all_user_ratings($user_id){
+		$query = $this->db->query('
+			SELECT
+				*
+			FROM
+				ratings
+			WHERE
+				ratings.user_id = ?
+			', array($user_id));
+
+		return $query->result();
+	}
+
 	public function get_ratings($user_id, $type){
 		$query = $this->db->query('
 			SELECT
@@ -75,6 +88,32 @@ class Ratings_model extends CI_Model{
 	public function get_customer_record($user_id)
 	{
 		return $this->get_record($user_id, 1);
+	}
+
+	public function get_bad_ratings($user_id){
+		$query = $this->db->query('
+			SELECT
+				COUNT(ratings.rating_id) as num
+			FROM
+				ratings
+			WHERE
+				ratings.value = 0      AND
+				ratings.user_id = ?
+			',array($user_id));
+		return $query->row()->num;
+	}
+
+	public function get_good_ratings($user_id){
+		$query = $this->db->query('
+			SELECT
+				COUNT(ratings.rating_id) as num
+			FROM
+				ratings
+			WHERE
+				ratings.value = 1      AND
+				ratings.user_id = ?
+			',array($user_id));
+		return $query->row()->num;
 	}
 }
 

@@ -24,6 +24,7 @@ class Trips extends CI_Controller {
 		check_auth();
 		$this->load->model("orders_model");
 
+		date_default_timezone_set('America/Los_Angeles');
 		$trips = $this->trips_model->get_all_active_trips();
 		$orders = array();
 		for ($i=0; $i<count($trips); $i++) {
@@ -44,6 +45,19 @@ class Trips extends CI_Controller {
 		$user_id = $this->input->post("user_id");
 		$trips = $this->trips_model->get_user_active_trips($user_id);
 		echo json_encode(array("trips"=>$trips));
+	}
+
+	public function get_user_trips_content(){
+		$user_id = check_auth();
+		$this->load->model("orders_model");
+
+		date_default_timezone_set('America/Los_Angeles');
+		$trips = $this->trips_model->get_user_active_trips($user_id);
+		$orders = array();
+		for ($i=0; $i<count($trips); $i++) {
+			$orders[$i] = $this->orders_model->get_trip_orders($trips[$i]->trip_id);
+		}
+		$this->load->view("content/trips_list", array("trips"=>$trips, "orders"=>$orders));
 	}
 
 	public function delete_trip() {

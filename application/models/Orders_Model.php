@@ -85,7 +85,10 @@ class Orders_Model extends CI_Model{
 				users
 			WHERE 
 				orders.trip_id = ?    AND
-				users.user_id = orders.customer_id', 
+				users.user_id = orders.customer_id
+			ORDER BY
+				orders.fee DESC'
+				, 
 			array($trip_id));
 
 		return $query->result();
