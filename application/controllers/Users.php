@@ -124,8 +124,11 @@ class Users extends CI_Controller{
 			exit(json_encode(array("No user_id given")));
 		}
 
-		$this->load->model("users_model");
+		$this->load->model(array("users_model", "ratings_model"));
 		$data["user"] = $this->users_model->get_user($user_id);
+		$data["ratings"] = $this->ratings_model->get_all_user_ratings($user_id);
+		$data["good_ratings"] = $this->ratings_model->get_good_ratings($user_id);
+		$data["bad_ratings"] = $this->ratings_model->get_bad_ratings($user_id);
 
 		$this->load->view("content/user_info", $data);
 	}

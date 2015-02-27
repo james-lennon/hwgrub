@@ -3,7 +3,7 @@
     <img src="<? echo $order->img_url; ?>">
   </a>
   <div class="content">
-    <a class="author"><? echo "$order->first_name $order->last_name"; ?></a>
+    <a class="author view-user" user-id="<? echo $order->customer_id; ?>"><? echo "$order->first_name $order->last_name"; ?></a>
     <div class="metadata">
       <span class="date">Fee = $<? echo "$order->fee"; ?></span>
       <? if($order->state==1): ?>

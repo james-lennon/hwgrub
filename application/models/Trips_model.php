@@ -39,7 +39,7 @@ class Trips_model extends CI_Model{
 			return FALSE;
 		}
 
-		$query = $this->db->query('SELECT * FROM trips WHERE trips.driver_id = ? AND trips.expiration > ?', array($user_id, time()));
+		$query = $this->db->query('SELECT * FROM trips WHERE trips.driver_id = ? AND trips.expiration > ? ORDER BY trips.expiration ASC', array($user_id, time()));
 		return $query->result();
 	}
 
@@ -50,7 +50,15 @@ class Trips_model extends CI_Model{
 
 	public function get_all_active_trips() {
 		$expiration = time();
-		$query = $this->db->query('SELECT * FROM trips WHERE trips.expiration > ?', array($expiration));
+		$query = $this->db->query('
+			SELECT 
+				* 
+			FROM 
+				trips 
+			WHERE 
+				trips.expiration > ?
+			ORDER BY
+				trips.expiration ASC', array($expiration));
 		return $query->result();
 	}
 
@@ -65,16 +73,4 @@ class Trips_model extends CI_Model{
 				trips.trip_id = ?
 			', array(0, $trip_id));
 	}
-
-	// public function get_user_active_trips($driver_id) {
-
-	// 	$query = $this->db->query('SELECT * from users WHERE users.user_id = ?', array($user_id));
-	// 	if($query->num_rows()==0){
-	// 		return FALSE;
-	// 	}
-
-	// 	$expiration = time();
-	// 	$query = $this->db->query('SELECT * FROM trips WHERE trips.driver_id = ? AND trips.expiration > ?', array($driver_id, $expiration));
-	// 	return $query->result();
-	// }
 }

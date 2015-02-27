@@ -18,4 +18,8 @@
       <? echo $bad_ratings; ?>
     </div>
   </div>
+<div class="ui left icon add-rating-btn button" user-id="<? echo $user_id; ?>" name="<? echo $first_name; ?>">
+  <i class="add icon"></i>
+  Add Rating
+</div>
 </div>
