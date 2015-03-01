@@ -115,11 +115,6 @@ class Orders_Model extends CI_Model{
 			users.user_id = orders.customer_id
 			', array($customer_id));
 
-		if ($query->num_rows() == 0)
-		{
-			return FALSE;
-		}
-
 		return $query->result(); 
 	}
 

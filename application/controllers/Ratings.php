@@ -5,7 +5,7 @@ class Ratings extends CI_Controller {
 
 	public function __construct() {
 		parent::__construct();
-		$this->load->model("orders_model");
+		$this->load->model("ratings_model");
 	}
 
 	public function get_driver_ratings()
@@ -35,14 +35,18 @@ class Ratings extends CI_Controller {
 	}
 
 	public function add_rating() {
-		check_auth();
+		$my_user_id = check_auth();
 		$user_id = $this->input->post("user_id");
 		$type = $this->input->post("type"); 
 		$rating_text = $this->input->post("rating_text");
 		$value = $this->input->post("rating_value");
 
-		if(!($user_id && $type && $rating_text && $value)){
+		if(!($user_id && ($type!==FALSE) && $rating_text && ($value!==FALSE))){
 			echo json_encode(array("error"=>"No user id, type, rating text, or value."));
+			exit();
+		}
+		if($my_user_id == $user_id){
+			echo json_encode(array("error"=>"You can't rate yourself, dummy!"));
 			exit();
 		}
 

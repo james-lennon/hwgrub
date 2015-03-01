@@ -29,7 +29,17 @@ class Trips_model extends CI_Model{
 			return FALSE;
 		}
 
-		$query = $this->db->query('SELECT * FROM trips WHERE trips.driver_id = ?', array($user_id));
+		$query = $this->db->query('
+			SELECT 
+				trips.*,
+				trips.expiration < ? as expired
+			FROM 
+				trips 
+			WHERE
+				trips.driver_id = ?     AND
+				trips.expiration > ?
+			ORDER BY 
+				trips.expiration ASC', array(time(), $user_id, strtotime("midnight")));
 		return $query->result();
 	}
 
