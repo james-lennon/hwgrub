@@ -59,36 +59,14 @@ class Users extends CI_Controller{
 		$this->load->model("users_model");
 		$url = $this->users_model->forgot_password($email);
 		if($url){
+			//Send Email Here
+			$this->load->library("email");
+			$this->email->subject("Set Password for WolverEats");
+			$this->email->to($email);
+
 			echo json_encode(array("url"=>$url));
 		}else{
 			echo json_encode(array("error"=>"No user with email or wait one day."));
-		}
-	}
-
-	public function forgot($hash = FALSE){
-		if(!$hash){
-			show_error("Invalid forgot URL");
-			exit();
-		}else{
-			$this->load->model('users_model');
-			$user = $this->users_model->check_forgot_hash($hash);
-			if($user){
-				$this->load->helper(array('url','form'));
-				$this->load->library('form_validation');
-
-				$this -> form_validation -> set_rules('password', 'Password', 'required');
-				$this -> form_validation -> set_rules('confirm-password', 'Password Confirmation', 'required|matches[password]');
-
-				if ($this -> form_validation -> run() == FALSE) {
-					echo validation_errors();
-					$this->load->view("set_password");
-				} else {
-					$this->users_model->set_password($user->user_id, md5($this->input->post("password")));
-					echo "Successfully set password";
-				}
-			}else{
-				show_error("Invalid forgot URL");
-			}
 		}
 	}
 

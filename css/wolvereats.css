@@ -1,0 +1,56 @@
+body{
+  /*position: relative;*/
+  /*top: 7em;*/
+}
+
+#home-page{
+  margin-top: 2em;
+}
+
+.ui.segment.signin{
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+#food-section{
+  background-image: url("http://www.joansonthird.com/media/wysiwyg/deli_case_copy.jpg");
+  height: 50em;
+}
+
+.ratings-list{
+  height: 32em;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.filler{
+  height: 32em;
+}
+
+#success-segment{
+  width: 16em;
+  height: 16em;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2em;
+}
+
+#top-bar{
+  background-color: white;
+  width: 100%;
+  /*height: 5em;*/
+  /*position: fixed;*/
+  z-index: 99;
+  padding: .5em;
+  /*margin-bottom: 2em;*/
+}
+
+#nav-img{
+  width: 5em;
+  /*display: inline;*/
+}
+
+#nav-header{
+  /*display: inline;*/
+  /*margin: 1em;*/
+}
