@@ -32,12 +32,17 @@ class Trips_model extends CI_Model{
 		$query = $this->db->query('
 			SELECT 
 				trips.*,
+				users.img_url,
+				users.first_name,
+				users.last_name,
 				trips.expiration < ? as expired
 			FROM 
-				trips 
+				trips,
+				users
 			WHERE
 				trips.driver_id = ?     AND
-				trips.expiration > ?
+				trips.expiration > ?    AND
+				trips.driver_id = users.user_id
 			ORDER BY 
 				trips.expiration ASC', array(time(), $user_id, strtotime("midnight")));
 		return $query->result();
@@ -62,11 +67,16 @@ class Trips_model extends CI_Model{
 		$expiration = time();
 		$query = $this->db->query('
 			SELECT 
-				* 
+				trips.*,
+				users.first_name,
+				users.last_name,
+				users.img_url
 			FROM 
-				trips 
+				trips,
+				users
 			WHERE 
-				trips.expiration > ?
+				trips.expiration > ?      AND
+				trips.driver_id = users.user_id
 			ORDER BY
 				trips.expiration ASC', array($expiration));
 		return $query->result();

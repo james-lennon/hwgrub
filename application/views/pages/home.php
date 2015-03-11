@@ -328,7 +328,7 @@ $this->load->view("components/header");
       </div>
     </div>
   </div>
-  <div class="ui basic inverted modal" id="view-user-modal">
+  <div class="ui modal" id="view-user-modal">
     <i class="close icon"></i>
     <div class="header">
       View User

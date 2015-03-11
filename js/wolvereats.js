@@ -82,8 +82,7 @@ function onSignInSuccess(result){
   user_id = result["user_id"];
   console.log("Signed in: "+user_id);
   showModalPage("home-page");
-  loadTrips();
-  loadMyTrips();
+  refreshAll();
 
   loadProfile(user_id);
 }
@@ -120,8 +119,14 @@ $("#logout-btn").click(function(){
   $.post(base_url+"users/logout",{});
 });
 
-$("#trips-refresh").click(function(){
+function refreshAll(){
   loadTrips();
+  loadMyTrips();
+  loadMyOrders();
+}
+
+$("#trips-refresh").click(function(){
+  refreshAll();
 });
 
 $("#trips-add").click(function(){
@@ -164,7 +169,7 @@ function setUpLinks(){
     var accept_order_id = $(this).attr("order-id");
     $.post(base_url+"orders/accept_order", {order_id:accept_order_id}, function(data, status){
       console.log("Accept order response: "+data);
-      loadMyTrips();
+      refreshAll();
     });
   });
 }
@@ -172,7 +177,7 @@ function setUpLinks(){
 //My Orders
 
 $("#orders-refresh-btn").click(function(){
-  loadMyOrders();
+  refreshAll();
 });
 
 function loadMyOrders(){
@@ -187,7 +192,7 @@ function loadMyOrders(){
 //My Trips
 
 $("#my-trips-refresh-btn").click(function(){
-  loadMyTrips();
+  refreshAll();
 });
 
 function loadMyTrips(){
@@ -237,7 +242,7 @@ function onOrderSubmit(){
     $("#order-submit-btn").removeClass("loading");
     $("#order-form").form("clear");
     $("#add-order-modal").modal("hide");
-    loadTrips();
+    refreshAll();
   });
 }
 
@@ -273,7 +278,7 @@ function onTripSubmit(){
     $("#trip-submit-btn").removeClass("loading");
     $("#trip-form").form("clear");
     $("#add-trip-modal").modal("hide");
-    loadTrips();
+    refreshAll();
   });
 }
 
@@ -311,7 +316,6 @@ function onRatingSubmit(){
     $("#rating-submit-btn").removeClass("loading");
     $("#rating-form").form("clear");
     $("#add-rating-modal").modal("hide");
-    // loadTrips();
   });
 }
 
