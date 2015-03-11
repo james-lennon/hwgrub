@@ -97,7 +97,7 @@ class Orders_Model extends CI_Model{
 	public function get_all_customer_orders($customer_id)
 	{
 		$query = $this->db->query('
-		SELECT 
+		SELECT
 			orders.order_id,
 			orders.trip_id, 
 			orders.customer_id,
@@ -114,11 +114,6 @@ class Orders_Model extends CI_Model{
 			orders.customer_id = ?    AND
 			users.user_id = orders.customer_id
 			', array($customer_id));
-
-		if ($query->num_rows() == 0)
-		{
-			return FALSE;
-		}
 
 		return $query->result(); 
 	}

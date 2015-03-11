@@ -18,7 +18,7 @@ class Orders extends CI_Controller {
 			echo json_encode(array("error"=>"No order text given"));
 			exit();
 		}
-		else if (!($fee && $trip_id)) {
+		else if (!(($fee!==FALSE) && $trip_id)) {
 			echo json_encode(array("error"=>"No fee or trip id given"));
 			exit();
 		}
@@ -35,7 +35,7 @@ class Orders extends CI_Controller {
 			echo json_encode(array("error"=>"No order id given"));
 			exit();
 		}
-		$this->order_model->update_order_status($order_id, $state);
+		$this->orders_model->update_order_status($order_id, $state);
 		echo json_encode(array("success"=>1));
 	}
 
@@ -74,6 +74,13 @@ class Orders extends CI_Controller {
 
 		$order = $this->order_model->get_order($order_id);
 		echo json_encode($order);
+	}
+
+	public function get_orders_content(){
+		$user_id = check_auth();
+
+		$orders = $this->orders_model->get_all_customer_orders($user_id);
+		$this->load->view("content/trip_orders", array("orders"=>$orders));
 	}
 
 	public function get_all_active_orders() {

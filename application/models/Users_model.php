@@ -71,7 +71,7 @@ class Users_model extends CI_Model{
 				email = ?
 			', array($token, time(), $email));
 
-		$url = base_url("users/forgot/$token");
+		$url = base_url("pages/forgot/$token");
 		return $url;
 	}
 

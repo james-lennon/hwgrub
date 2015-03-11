@@ -7,14 +7,18 @@
     <div class="metadata">
       <span class="date">Fee = $<? echo "$order->fee"; ?></span>
       <? if($order->state==1): ?>
-      <div>
-        <i class="check icon"></i>
-        Accepted
-      </div>
+        <div class="">
+          <i class="green check icon">Accepted</i>
+        </div>
       <? endif; ?>
     </div>
     <div class="text">
       <? echo $order->order_text; ?>
+      <? if(isset($my_trip) && $order->state==0 && !$expired): ?>
+        <a class="accept-order-btn" order-id="<? echo $order->order_id; ?>">
+          <i class="big green check icon"></i>
+        </a>
+      <? endif; ?>
     </div>
   </div>
 </div>
