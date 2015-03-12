@@ -84,7 +84,7 @@ class Orders_Model extends CI_Model{
 				orders,
 				users
 			WHERE 
-				orders.trip_id = ?    AND
+				orders.trip_id = ?   AND
 				users.user_id = orders.customer_id
 			ORDER BY
 				orders.fee DESC'
@@ -92,6 +92,13 @@ class Orders_Model extends CI_Model{
 			array($trip_id));
 
 		return $query->result();
+	}
+
+	public function get_num_trip_orders($trip_id)
+	{
+		$orders = $this->get_trip_orders($trip_id); 
+		$numOrders = count($orders); 
+		return $numOrders; 
 	}
 
 	public function get_all_customer_orders($customer_id)

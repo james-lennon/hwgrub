@@ -48,7 +48,7 @@ class Orders extends CI_Controller {
 			exit();
 		}
 
-		$this->order_model->update_order_status($order_id, $state);
+		$this->orders_model->update_order_status($order_id, $state);
 		echo json_encode(array("success"=>1));
 	}
 
@@ -60,8 +60,20 @@ class Orders extends CI_Controller {
 			exit();
 		}
 
-		$orders = $this->order_model->get_trip_orders($trip_id);
+		$orders = $this->orders_model->get_trip_orders($trip_id);
 		echo json_encode($orders);
+	}
+
+	public function get_num_trip_orders()
+	{
+		check_auth(); 
+		$trip_id = $this->input->post("trip_id");
+		if (!$trip_id) {
+			echo json_encode(array("error"=>"No trip id given"));
+			exit();
+		}
+		$numOrders = $this->orders_model->get_num_trip_orders($trip_id); 
+		echo json_encode($numOrders); 
 	}
 
 	public function get_order() {
@@ -86,14 +98,14 @@ class Orders extends CI_Controller {
 	public function get_all_active_orders() {
 		check_auth();
 
-		$orders = $this->order_model->get_all_active_orders();
+		$orders = $this->orders_model->get_all_active_orders();
 		echo json_encode($orders);
 	}
 
 	public function get_all_pending_orders() {
 		check_auth();
 
-		$orders = $this->order_model->get_all_pending_orders();
+		$orders = $this->orders_model->get_all_pending_orders();
 		echo json_encode($orders);
 	}
 
@@ -105,7 +117,7 @@ class Orders extends CI_Controller {
 			exit();
 		}
 
-		$orders = $this->order_model->get_active_customer_orders($customer_id);
+		$orders = $this->orders_model->get_active_customer_orders($customer_id);
 		echo json_encode($orders);
 	}
 
