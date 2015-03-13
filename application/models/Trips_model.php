@@ -54,9 +54,27 @@ class Trips_model extends CI_Model{
 			return FALSE;
 		}
 
-		$query = $this->db->query('SELECT * FROM trips WHERE trips.driver_id = ? AND trips.expiration > ? ORDER BY trips.expiration ASC', array($user_id, time()));
+		$query = $this->db->query('
+			SELECT trips.*,
+			(SELECT COUNT(*) FROM orders WHERE orders.trip_id = trips.trip_id) as order_count
+			 FROM trips 
+			WHERE trips.driver_id = ? 
+			AND trips.expiration > ? 
+			ORDER BY trips.expiration ASC', array($user_id, time()));
 		return $query->result();
 	}
+
+	public function get_user_inactive_trips($user_id) {
+		$query = $this->db->query('SELECT * from users WHERE users.user_id = ?', array($user_id));
+		if($query->num_rows()==0){
+			return FALSE;
+		}
+
+		$query = $this->db->query('SELECT * FROM trips WHERE trips.driver_id = ? AND trips.expiration < ? ORDER BY trips.expiration ASC', array($user_id, time()));
+		return $query->result();
+	}
+
+
 
 	public function get_all_trips() {
 		$query = $this->db->query('SELECT * from trips');
