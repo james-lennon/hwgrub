@@ -49,17 +49,28 @@ class Trips_model extends CI_Model{
 	}
 
 	public function get_user_active_trips($user_id) {
-		$query = $this->db->query('SELECT * from users WHERE users.user_id = ?', array($user_id));
+		 $query = $this->db->query('SELECT * from users WHERE users.user_id = ?', array($user_id));
 		if($query->num_rows()==0){
 			return FALSE;
 		}
 
 		$query = $this->db->query('
-			SELECT trips.*,
-			(SELECT COUNT(*) FROM orders WHERE orders.trip_id = trips.trip_id) as order_count
-			 FROM trips 
-			WHERE trips.driver_id = ? 
-			AND trips.expiration > ? 
+			SELECT
+				trips.*,
+				users.img_url,
+				users.first_name,
+				users.last_name,
+			(SELECT COUNT(*)
+				FROM orders 
+				WHERE orders.trip_id = trips.trip_id) AS order_count
+			 FROM 
+			 	orders,
+			 	trips,
+			 	users
+			WHERE 
+				trips.driver_id = ? AND 
+				trips.expiration > ? AND
+				trips.driver_id = users.user_id
 			ORDER BY trips.expiration ASC', array($user_id, time()));
 		return $query->result();
 	}
@@ -70,7 +81,25 @@ class Trips_model extends CI_Model{
 			return FALSE;
 		}
 
-		$query = $this->db->query('SELECT * FROM trips WHERE trips.driver_id = ? AND trips.expiration < ? ORDER BY trips.expiration ASC', array($user_id, time()));
+		$query = $this->db->query('
+			SELECT 
+				trips.*,
+				users.img_url,
+				users.first_name,
+				users.last_name,
+			(SELECT COUNT(*) 
+				FROM orders 
+				WHERE orders.trip_id = trips.trip_id) AS order_count
+			 FROM 
+			 	orders,
+			 	trips,
+			 	users
+			WHERE 
+				trips.driver_id = ? AND 
+				trips.expiration < ? AND
+				trips.driver_id = users.user_id
+			ORDER BY 
+				trips.expiration ASC', array($user_id, time()));
 		return $query->result();
 	}
 
