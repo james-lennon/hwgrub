@@ -49,7 +49,7 @@ class Trips_model extends CI_Model{
 	}
 
 	public function get_user_active_trips($user_id) {
-		 $query = $this->db->query('SELECT * from users WHERE users.user_id = ?', array($user_id));
+		$query = $this->db->query('SELECT * from users WHERE users.user_id = ?', array($user_id));
 		if($query->num_rows()==0){
 			return FALSE;
 		}
@@ -64,7 +64,6 @@ class Trips_model extends CI_Model{
 				FROM orders 
 				WHERE orders.trip_id = trips.trip_id) AS order_count
 			 FROM 
-			 	orders,
 			 	trips,
 			 	users
 			WHERE 
@@ -91,7 +90,6 @@ class Trips_model extends CI_Model{
 				FROM orders 
 				WHERE orders.trip_id = trips.trip_id) AS order_count
 			 FROM 
-			 	orders,
 			 	trips,
 			 	users
 			WHERE 
