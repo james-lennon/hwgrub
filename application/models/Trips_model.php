@@ -70,7 +70,7 @@ class Trips_model extends CI_Model{
 				trips.driver_id = ? AND 
 				trips.expiration > ? AND
 				trips.driver_id = users.user_id
-			ORDER BY trips.expiration ASC', array($user_id, time()));
+			ORDER BY trips.eta ASC', array($user_id, time()));
 		return $query->result();
 	}
 
@@ -97,7 +97,7 @@ class Trips_model extends CI_Model{
 				trips.expiration < ? AND
 				trips.driver_id = users.user_id
 			ORDER BY 
-				trips.expiration ASC', array($user_id, time()));
+				trips.eta DESC', array($user_id, time()));
 		return $query->result();
 	}
 
