@@ -43,7 +43,7 @@ class Orders_Model extends CI_Model{
 		"trip_id"=> $trip_id, 
 		"order_text"=>$order_text, 
 		"customer_id"=>$customer_id, 
-		"state"=> 0, 
+		"state"=> '0', 
 		"fee"=>$fee,);
 
 		$this->db->insert('orders', $data);
@@ -111,6 +111,7 @@ class Orders_Model extends CI_Model{
 			orders.order_text,  
 			orders.state,
 			orders.fee, 
+			trips.restaurant_name,
 			users.first_name,
 			users.last_name,
 			users.img_url
@@ -119,7 +120,9 @@ class Orders_Model extends CI_Model{
 			users
 		WHERE 
 			orders.customer_id = ?    AND
-			users.user_id = orders.customer_id
+			users.user_id = orders.customer_id AND
+			trips.trip_id = orders.trip_id
+
 			', array($customer_id));
 
 		return $query->result(); 
@@ -146,6 +149,64 @@ class Orders_Model extends CI_Model{
 	}
 
 
+	public function get_active_customer_orders($customer_id)
+	{
+		//$arr = array(0, 1);
+		//var_dump($arr);
+		$query= $this->db->query('
+		SELECT
+			orders.order_id,
+			orders.trip_id, 
+			orders.customer_id,
+			orders.order_text,  
+			orders.state,
+			orders.fee, 
+			trips.restaurant_name
+		FROM 
+			orders, 
+			trips
+		WHERE 
+			orders.customer_id = ? AND 
+			(orders.state = ? OR orders.state = ?) AND 
+			trips.trip_id = orders.trip_id'
+			,array($customer_id, '0', '1'));
+
+		if($query->num_rows()==0){
+			return array();
+		}
+
+		return $query->result(); 
+	}
+
+	public function get_inactive_customer_orders($customer_id)
+	{
+		//$arr = array('2', '3');
+		//var_dump($arr);
+		$query= $this->db->query('
+		SELECT
+			orders.order_id,
+			orders.trip_id, 
+			orders.customer_id,
+			orders.order_text,  
+			orders.state,
+			orders.fee, 
+			trips.restaurant_name
+		FROM 
+			orders, 
+			trips
+		WHERE 
+			orders.customer_id = ? AND 
+			(orders.state = ? OR orders.state = ?) AND  
+			trips.trip_id = orders.trip_id', 
+			array($customer_id, '2', '3'));
+
+		if($query->num_rows()==0){
+			return array();
+		}
+
+		return $query->result(); 
+	}
+
 	public function get_customer_orders_of_state($customer_id, $status)
 	{
 		$query= $this->db->query('
@@ -162,7 +223,7 @@ class Orders_Model extends CI_Model{
 			orders.customer_id = ?, 
 			orders.status = ?,
 
-			', array($customer_id, $stauts));
+			',array($customer_id, $status));
 
 		if($query->num_rows()==0){
 			return FALSE;
@@ -185,7 +246,6 @@ class Orders_Model extends CI_Model{
 			orders
 		WHERE 
 			orders.state = ? 
-
 			', array($state));
 
 		if ($query->num_rows() == 0)

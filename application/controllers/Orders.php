@@ -121,4 +121,16 @@ class Orders extends CI_Controller {
 		echo json_encode($orders);
 	}
 
+	public function get_all_customer_orders()
+	{
+		$customer_id = check_auth(); 
+		if (!$customer_id){
+			echo json_encode(array("error"=>"No customer id given."));
+			exit();
+		}
+		$active = $this->orders_model->get_active_customer_orders($customer_id); 
+		$inactive = $this->orders_model->get_inactive_customer_orders($customer_id); 
+		echo json_encode(array("active_orders"=>$active, "inactive_orders"=>$inactive));
+	}
+
 }
