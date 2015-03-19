@@ -161,14 +161,16 @@ class Orders_Model extends CI_Model{
 			orders.order_text,  
 			orders.state,
 			orders.fee, 
-			trips.restaurant_name
+			trips.restaurant_name,
+			trips.eta
 		FROM 
 			orders, 
 			trips
 		WHERE 
 			orders.customer_id = ? AND 
 			(orders.state = ? OR orders.state = ?) AND 
-			trips.trip_id = orders.trip_id'
+			trips.trip_id = orders.trip_id
+		ORDER BY trips.eta ASC'
 			,array($customer_id, '0', '1'));
 
 		if($query->num_rows()==0){
@@ -190,14 +192,16 @@ class Orders_Model extends CI_Model{
 			orders.order_text,  
 			orders.state,
 			orders.fee, 
-			trips.restaurant_name
+			trips.restaurant_name, 
+			trips.eta
 		FROM 
 			orders, 
 			trips
 		WHERE 
 			orders.customer_id = ? AND 
 			(orders.state = ? OR orders.state = ?) AND  
-			trips.trip_id = orders.trip_id', 
+			trips.trip_id = orders.trip_id
+		ORDER BY trips.eta DESC', 
 			array($customer_id, '2', '3'));
 
 		if($query->num_rows()==0){
