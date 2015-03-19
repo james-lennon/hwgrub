@@ -61,7 +61,7 @@ class Orders extends CI_Controller {
 		}
 
 		$orders = $this->orders_model->get_trip_orders($trip_id);
-		echo json_encode($orders);
+		echo json_encode(array("orders"=>$orders));
 	}
 
 	public function get_num_trip_orders()
