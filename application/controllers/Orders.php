@@ -60,8 +60,10 @@ class Orders extends CI_Controller {
 			exit();
 		}
 
-		$orders = $this->orders_model->get_trip_orders($trip_id);
-		echo json_encode(array("orders"=>$orders));
+		$pending = $this->orders_model->get_pending_trip_orders($trip_id);
+		$accepted = $this->orders_model->get_accepted_trip_orders($trip_id); 
+		$rejected = $this->orders_model->get_rejected_trip_orders($trip_id); 
+		echo json_encode(array("pending"=>$pending, "accepted"=>$accepted, "rejected"=>$rejected));
 	}
 
 	public function get_num_trip_orders()

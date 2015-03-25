@@ -68,7 +68,7 @@ class Orders_Model extends CI_Model{
 			', array($state, $order_id));
 	}
 
-	public function get_trip_orders($trip_id) 
+	public function get_pending_trip_orders($trip_id) 
 	{
 		$query = $this->db->query('
 			SELECT 
@@ -85,11 +85,67 @@ class Orders_Model extends CI_Model{
 				users
 			WHERE 
 				orders.trip_id = ?   AND
-				users.user_id = orders.customer_id
+				users.user_id = orders.customer_id AND
+				orders.state = ?
 			ORDER BY
 				orders.fee DESC'
 				, 
-			array($trip_id));
+			array($trip_id, 0));
+
+		return $query->result();
+	}
+
+	public function get_accepted_trip_orders($trip_id) 
+	{
+		$query = $this->db->query('
+			SELECT 
+				orders.order_id,
+				orders.order_text, 
+				orders.customer_id, 
+				orders.state, 
+				orders.fee,  
+				users.first_name,
+				users.last_name,
+				users.img_url
+			FROM 
+				orders,
+				users
+			WHERE 
+				orders.trip_id = ?   AND
+				users.user_id = orders.customer_id AND
+				orders.state = ?
+			ORDER BY
+				orders.fee DESC'
+				, 
+			array($trip_id, 1));
+
+		return $query->result();
+	}
+
+
+	public function get_rejected_trip_orders($trip_id) 
+	{
+		$query = $this->db->query('
+			SELECT 
+				orders.order_id,
+				orders.order_text, 
+				orders.customer_id, 
+				orders.state, 
+				orders.fee,  
+				users.first_name,
+				users.last_name,
+				users.img_url
+			FROM 
+				orders,
+				users
+			WHERE 
+				orders.trip_id = ?   AND
+				users.user_id = orders.customer_id AND
+				orders.state = ?
+			ORDER BY
+				orders.fee DESC'
+				, 
+			array($trip_id, 2));
 
 		return $query->result();
 	}
