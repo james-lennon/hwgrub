@@ -130,9 +130,10 @@ class Orders extends CI_Controller {
 			echo json_encode(array("error"=>"No customer id given."));
 			exit();
 		}
-		$active = $this->orders_model->get_active_customer_orders($customer_id); 
-		$inactive = $this->orders_model->get_inactive_customer_orders($customer_id); 
-		echo json_encode(array("active_orders"=>$active, "inactive_orders"=>$inactive));
+		$accepted = $this->orders_model->get_accepted_customer_orders($customer_id); 
+		$pending = $this->orders_model->get_pending_customer_orders($customer_id);
+		$completed = $this->orders_model->get_completed_customer_orders($customer_id);
+		echo json_encode(array("accepted_orders"=>$accepted, "pending_orders"=>$pending, "completed_orders"=>$completed));
 	}
 
 }
