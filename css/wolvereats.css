@@ -12,8 +12,22 @@ body{
   margin-bottom: 40px;
 }
 
+/*ui.segment.signin:before{
+  background-image: url("http://www.joansonthird.com/media/wysiwyg/deli_case_copy.jpg");
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
+}*/
+
 #food-section{
   background-image: url("http://www.joansonthird.com/media/wysiwyg/deli_case_copy.jpg");
+  -webkit-filter: bl/*ur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);*/
   height: 50em;
 }
 

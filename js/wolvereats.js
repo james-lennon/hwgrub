@@ -184,6 +184,7 @@ function loadMyOrders(){
   $("#orders-refresh-btn").addClass("loading");
 
   $.post(base_url+"orders/get_orders_content", {}, function(data, status){
+    console.log(data);
     $("#orders-list").html(data);
     $("#orders-refresh-btn").removeClass("loading");
   });

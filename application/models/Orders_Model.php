@@ -95,6 +95,31 @@ class Orders_Model extends CI_Model{
 		return $query->result();
 	}
 
+	public function get_trip_orders($trip_id) 
+	{
+		$query = $this->db->query('
+			SELECT 
+				orders.order_id,
+				orders.order_text,
+				orders.customer_id, 
+				orders.state,
+				orders.fee,
+				users.first_name,
+				users.last_name,
+				users.img_url
+			FROM 
+				orders,
+				users
+			WHERE 
+				orders.trip_id = ?    AND
+				users.user_id = orders.customer_id
+			ORDER BY
+				orders.fee DESC'
+				, 
+			array($trip_id));
+		return $query->result();
+	}
+
 	public function get_accepted_trip_orders($trip_id) 
 	{
 		$query = $this->db->query('
@@ -173,7 +198,8 @@ class Orders_Model extends CI_Model{
 			users.img_url
 		FROM 
 			orders,
-			users
+			users,
+			trips
 		WHERE 
 			orders.customer_id = ?    AND
 			users.user_id = orders.customer_id AND
@@ -194,15 +220,7 @@ class Orders_Model extends CI_Model{
 		return $this->get_customer_orders_of_state($customer_id, 0); 
 	}
 
-	//Purposely combined completed and rejectd so that they're one section in the app, and it sorts them
-
-/*
-	public function get_rejected_customer_orders($customer_id)
-	{
-		return $this->get_customer_orders_of_state($customer_id, 2); 
-	}
-
-*/
+	//Purposely combined completed and rejected so that they're one section in the app, and it sorts them
 
 	public function get_completed_customer_orders($customer_id)
 	{
