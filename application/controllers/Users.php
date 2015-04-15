@@ -70,6 +70,31 @@ class Users extends CI_Controller{
 		}
 	}
 
+	public function get_current_user_content()
+	{
+		$user_id = check_auth();
+
+		if(!$user_id){
+			exit(json_encode(array("No user_id given")));
+		}
+		else 
+		{
+			$this->load->model(array("users_model","ratings_model", "trips_model"));
+			$driver_ratings = $this->ratings_model->get_driver_ratings($user_id);
+			$customer_ratings = $this->ratings_model->get_customer_ratings($user_id);
+			$trips = $this->trips_model->get_user_trips($user_id);
+			$user = $this->users_model->get_user($user_id);
+
+			$data = array(
+				"user" => $user,
+				"trips" => $trips,
+				"driver_ratings" => $driver_ratings,
+				"customer_ratings" => $customer_ratings,
+				);
+			echo json_encode($data);
+		}
+	}
+	
 	public function get(){
 		check_auth();
 		$user_id = $this->input->post("user_id");
@@ -110,5 +135,7 @@ class Users extends CI_Controller{
 
 		$this->load->view("content/user_info", $data);
 	}
+
+
 
 }
