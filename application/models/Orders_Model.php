@@ -95,6 +95,31 @@ class Orders_Model extends CI_Model{
 		return $query->result();
 	}
 
+	public function get_trip_orders($trip_id) 
+	{
+		$query = $this->db->query('
+			SELECT 
+				orders.order_id,
+				orders.order_text,
+				orders.customer_id, 
+				orders.state,
+				orders.fee,
+				users.first_name,
+				users.last_name,
+				users.img_url
+			FROM 
+				orders,
+				users
+			WHERE 
+				orders.trip_id = ?    AND
+				users.user_id = orders.customer_id
+			ORDER BY
+				orders.fee DESC'
+				, 
+			array($trip_id));
+		return $query->result();
+	}
+
 	public function get_accepted_trip_orders($trip_id) 
 	{
 		$query = $this->db->query('
@@ -173,7 +198,8 @@ class Orders_Model extends CI_Model{
 			users.img_url
 		FROM 
 			orders,
-			users
+			users,
+			trips
 		WHERE 
 			orders.customer_id = ?    AND
 			users.user_id = orders.customer_id AND
@@ -194,14 +220,20 @@ class Orders_Model extends CI_Model{
 		return $this->get_customer_orders_of_state($customer_id, 0); 
 	}
 
-	public function get_rejected_customer_orders($customer_id)
-	{
-		return $this->get_customer_orders_of_state($customer_id, 2); 
-	}
+	//Purposely combined completed and rejected so that they're one section in the app, and it sorts them
 
 	public function get_completed_customer_orders($customer_id)
 	{
-		return $this->get_customer_orders_of_state($customer_id, 3); 
+		$completedAccepted = $this->get_customer_orders_of_state($customer_id, 3); 
+		$rejected = $this->get_customer_orders_of_state($customer_id, 2); 
+
+		$final = array_merge($completedAccepted, $rejected);
+		usort($final, function($a,$b) 
+		{
+			return $a['eta'] > $b['eta'];
+		});
+
+		return $final;
 	}
 
 
@@ -267,8 +299,15 @@ class Orders_Model extends CI_Model{
 		return $query->result(); 
 	}
 
-	public function get_customer_orders_of_state($customer_id, $status)
+	public function get_customer_orders_of_state($customer_id, $state)
 	{
+		$queryOrder;
+		if ($state == 0 || $state == 1) {
+			$queryOrder = "ASC";
+		}
+		else {
+			$queryOrder = "DESC";
+		}
 		$query= $this->db->query('
 		SELECT
 			orders.order_id,
@@ -277,19 +316,23 @@ class Orders_Model extends CI_Model{
 			orders.order_text,  
 			orders.state,
 			orders.fee, 
+			trips.restaurant_name,
+			trips.eta
 		FROM 
-			orders
+			orders,
+			trips
 		WHERE 
-			orders.customer_id = ?, 
-			orders.status = ?,
-
-			',array($customer_id, $status));
+			orders.customer_id = ? AND
+			orders.state = ? AND
+			trips.trip_id = orders.trip_id
+		ORDER BY trips.eta ' . $queryOrder,
+		 array($customer_id, $state));
 
 		if($query->num_rows()==0){
-			return FALSE;
+			return array();
 		}
 
-		return $query->result(); 
+		return $query->result_array(); 
 	}
 
 	public function get_all_orders_of_state($state)
@@ -310,10 +353,10 @@ class Orders_Model extends CI_Model{
 
 		if ($query->num_rows() == 0)
 		{
-			return FALSE;
+			return array();
 		}
 
-		return $query->result();
+		return $query->result_array();
 	}
 
 	public function get_all_pending_orders()
