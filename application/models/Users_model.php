@@ -16,7 +16,8 @@ class Users_model extends CI_Model{
 				users.last_name, 
 				users.email, 
 				users.phone, 
-				users.img_url
+				users.img_url,
+				users.password
 			FROM
 				users
 			WHERE

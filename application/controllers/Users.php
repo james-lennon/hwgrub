@@ -79,15 +79,20 @@ class Users extends CI_Controller{
 		}
 		else 
 		{
-			$this->load->model(array("users_model","ratings_model", "trips_model"));
+			$this->load->model(array("users_model","ratings_model", "trips_model", "orders_model"));
 			$driver_ratings = $this->ratings_model->get_driver_ratings($user_id);
 			$customer_ratings = $this->ratings_model->get_customer_ratings($user_id);
-			$trips = $this->trips_model->get_user_trips($user_id);
+			$aTrips = $this->trips_model->get_user_active_trips($user_id);
+			$iTrips = $this->trips_model->get_user_inactive_trips($user_id);
+			$orders = $this->orders_model->get_all_customer_orders($user_id); 
+			$numOrders = count($orders); 
+			$numTrips = count($aTrips) + count($iTrips); //fix this
 			$user = $this->users_model->get_user($user_id);
 
 			$data = array(
 				"user" => $user,
-				"trips" => $trips,
+				"num_trips" => $numTrips,
+				"num_orders" => $numOrders,
 				"driver_ratings" => $driver_ratings,
 				"customer_ratings" => $customer_ratings,
 				);
