@@ -101,6 +101,30 @@ class Users_model extends CI_Model{
 			', array($hash, $user_id));
 	}
 
+	public function set_phone($user_id, $phone)
+	{
+		$this->db->query(' 
+			UPDATE 
+				users
+			SET 
+				users.phone = ?
+			WHERE 
+				users.user_id = ?
+			', array($phone, $user_id)); 
+	}
+
+	public function set_email ($user_id, $new_email)
+	{
+		$this->db->query('
+			UPDATE 
+				users
+			SET
+				users.email = ?
+			WHERE 
+				users.user_id = ?
+			', array($new_email, $user_id)); 
+	}
+
 	public function set_img($user_id, $img_url){
 		$query = $this->db->query('SELECT * from users WHERE users.user_id = ?', array($user_id));
 		if($query->num_rows()==0){

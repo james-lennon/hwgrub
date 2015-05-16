@@ -141,6 +141,20 @@ class Users extends CI_Controller{
 		$this->load->view("content/user_info", $data);
 	}
 
+	public function set_phone()
+	{
+		$user_id = check_auth(); 
+		$phone = $this->input->post("phone"); 
+		$this->users_model->set_phone($user_id, $phone); 
+	}
+
+	public function set_email()
+	{
+		$user_id = check_auth(); 
+		$new_email = $this->input->post("new_email"); 
+		$this->users_model->set_email($user_id, $new_email); 
+	}
+
 
 
 }
